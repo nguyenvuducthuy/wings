@@ -135,11 +135,13 @@ seg_event_3(Ev, #seg{st=#st{selmode=Mode}}=Ss) ->
 -ifndef(DEBUG).
 seg_debug(Tail) -> Tail.
 mappers() ->
-    [{?__(1,"Unfolding"),lsqcm},				  
+    [{?__(1,"Unfolding (lscm alg)"),lsqcm},
+     {?__(6,"Unfolding (slim alg)"),slim},
      {?__(2,"Projection Normal"),project},
      {?__(3,"Projection Camera"),camera},
-     {?__(4,"Sphere Map"),sphere}
-    ,{?__(5,"Cylindrical Map"),cyl}
+     {?__(4,"Sphere Map"),sphere},
+     {?__(5,"Cylindrical Map"),cyl},
+     {"Harmonic", harmonic}
     ].
 -else.
 seg_debug(Tail) ->
@@ -150,8 +152,9 @@ seg_debug(Tail) ->
 	{?__(3,"Select seeds"),select_seeds},
         {?__(4,"Select Pinned vertices"), select_pinned}]}}|Tail].
 mappers() ->
-    [{?__(1,"Unfolding"),lsqcm}, 
+    [{?__(1,"Unfolding"),lsqcm},
      {?__(2,"Two pass Unfolding"),lsqcm2},
+     {?__(6,"Unfolding (slim alg)"),slim},
      {?__(3,"Projection"),project}].
 -endif.
 

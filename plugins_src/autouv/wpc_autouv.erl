@@ -397,15 +397,16 @@ command_menu(body, X, Y) ->
 	    {?__(32,"Hide"),hide,?__(33,"Hide selected charts but keep UV-coordinates")},
 	    {?__(34,"Delete"),delete,?__(35,"Remove UV-coordinates for the selected charts")},
 	    separator,
-	    {?__(36,"ReMap UV"), {remap, [{?__(37,"Stretch optimization"), stretch_opt, 
-				   ?__(38,"Optimize the chart stretch")},
-				  separator,
-				  {?__(39,"Unfold"), lsqcm, ?__(40,"Unfold the chart")},
-				  {?__(41,"Project Normal"), project, 
-				   ?__(42,"Project UVs from chart normal")},
-				  {?__(43,"Spherical"), sphere, 
-				   ?__(44,"Spherical mapping")}
-				 ]}, 
+	    {?__(36,"ReMap UV"),
+             {remap, [{?__(37,"Stretch optimization"), stretch_opt,
+                       ?__(38,"Optimize the chart stretch")},
+                      separator,
+                      {?__(39,"Unfold"), lsqcm, ?__(40,"Unfold the chart")},
+                      {?__(41,"Project Normal"), project,
+                       ?__(42,"Project UVs from chart normal")},
+                      {?__(43,"Spherical"), sphere,
+                       ?__(44,"Spherical mapping")}
+                     ]},
 	     ?__(45,"Calculate new UVs with chosen algorithm")}
 	   ] ++ option_menu(),
     wings_menu:popup_menu(X,Y, {auv,body}, Menu);
