@@ -188,7 +188,7 @@ scroll_help() ->
 event(Ev, St=#st{}) -> 
     event(Ev,St,none).
 %% Scroll wheel camera events
-event(#mousebutton{button=B}=Ev, _St, _Redraw) when B=:=4; B=:=5 ->
+event(#mousewheel{}=Ev, _St, _Redraw) ->
     generic_event(Ev,_St,_Redraw);
 % Camera mode specific events
 event(Ev, St, Redraw) ->
@@ -697,50 +697,31 @@ generic_event(redraw, _Camera, #state{func=Redraw}) when is_function(Redraw) ->
     Redraw(),
     keep;
 
-generic_event(#mousebutton{button=4,mod=Mod,state=?SDL_RELEASED}, _Camera, _Redraw)
+generic_event(#mousewheel{dir=ver, wheel=N, mod=Mod}, _Camera, _Redraw)
   when Mod band ?SHIFT_BITS =/= 0 andalso Mod band ?ALT_BITS =/= 0 ->
-    whrotate(0.5,0.0);
-generic_event(#mousebutton{button=5,mod=Mod,state=?SDL_RELEASED}, _Camera, _Redraw)
-  when Mod band ?SHIFT_BITS =/= 0 andalso Mod band ?ALT_BITS =/= 0 ->
-    whrotate(-0.5,0.0);
-generic_event(#mousebutton{button=4,mod=Mod,state=?SDL_RELEASED}, _Camera, _Redraw)
+    whrotate(N/2.0,0.0);
+generic_event(#mousewheel{dir=ver, wheel=N, mod=Mod}, _Camera, _Redraw)
   when Mod band ?SHIFT_BITS =/= 0 ->
-    whrotate(0.0,0.5);
-generic_event(#mousebutton{button=5,mod=Mod,state=?SDL_RELEASED}, _Camera, _Redraw)
-  when Mod band ?SHIFT_BITS =/= 0 ->
-    whrotate(0.0,-0.5);
+    whrotate(0.0,N/2.0);
 
-generic_event(#mousebutton{button=4,mod=Mod,state=?SDL_RELEASED}, _Camera, _Redraw)
+generic_event(#mousewheel{dir=ver, wheel=N, mod=Mod}, _Camera, _Redraw)
   when Mod band ?CTRL_BITS =/= 0 andalso Mod band ?ALT_BITS =/= 0 ->
-    whpan(0.05,0.0);
-generic_event(#mousebutton{button=5,mod=Mod,state=?SDL_RELEASED}, _Camera, _Redraw)
-  when Mod band ?CTRL_BITS =/= 0 andalso Mod band ?ALT_BITS =/= 0 ->
-    whpan(-0.05,0.0);
-generic_event(#mousebutton{button=4,mod=Mod,state=?SDL_RELEASED}, _Camera, _Redraw)
+    whpan(N/20.0,0.0);
+generic_event(#mousewheel{dir=ver, wheel=N, mod=Mod}, _Camera, _Redraw)
   when Mod band ?CTRL_BITS =/= 0 ->
-    whpan(0.0,0.05);
-generic_event(#mousebutton{button=5,mod=Mod,state=?SDL_RELEASED}, _Camera, _Redraw)
-  when Mod band ?CTRL_BITS =/= 0 ->
-    whpan(0.0,-0.05);
+    whpan(0.0,N/20.0);
 
-generic_event(#mousebutton{button=4,mod=Mod,state=?SDL_RELEASED}, _Camera, _Redraw)
+generic_event(#mousewheel{dir=ver, wheel=N, mod=Mod}, _Camera, _Redraw)
   when Mod band ?ALT_BITS =/= 0 ->
-    zoom_step_alt(-1);
-generic_event(#mousebutton{button=4,state=?SDL_RELEASED}, #st{}=St, none) ->
+    zoom_step_alt(-N);
+generic_event(#mousewheel{dir=ver, wheel=N}, #st{}=St, none) ->
 %% Matching 'none' stops zoom aim from being activated during a drag sequence.
 %% Zoom aim warps the mouse to the screen's centre, and this can cause a crash
 %% in since drag events also depend on cursor position.
-    aim_zoom(-1, St);
-generic_event(#mousebutton{button=4,state=?SDL_RELEASED}, _Camera, _Redraw) ->
-    zoom_step(-1);
-generic_event(#mousebutton{button=5,mod=Mod,state=?SDL_RELEASED}, _Camera, _Redraw)
-  when Mod band ?ALT_BITS =/= 0 ->
-    zoom_step_alt(1);
-generic_event(#mousebutton{button=5,state=?SDL_RELEASED}, _, none) ->
-%% Matching 'none' stops zoom aim from being activated during a drag sequence
-    zoom_step(1);
-generic_event(#mousebutton{button=5,state=?SDL_RELEASED}, _Camera, _Redraw) ->
-    zoom_step(1);
+    aim_zoom(-N, St);
+generic_event(#mousewheel{dir=ver, wheel=N}, _Camera, _Redraw) ->
+    zoom_step(-N);
+
 generic_event(grab_lost, Camera, _Redraw) ->
     stop_camera(Camera);
 generic_event(_, _, _) -> keep.
